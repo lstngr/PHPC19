@@ -20,20 +20,44 @@ void PoissonSolver::Run(){
     // Define convergence test frequency
     int conv_freq_test(20);
     // Avoid CPU cost by computing all U/F_function possible beforehand
-    std::vector<std::vector<double>> U_values;
-    std::vector<std::vector<double>> F_values;
+    std::vector<std::vector<double>> u_values;
+    std::vector<std::vector<double>> f_values;
     for( unsigned int ix=0; ix<gsize_; ix++ ){
         for( unsigned int iy=0; iy<gsize_; iy++ ){
-            U_values[ix][iy] = U_function(ix,iy);
-            F_values[ix][iy] = F_function(ix,iy);
+            u_values[ix][iy] = UFunction(ix,iy);
+            f_values[ix][iy] = FFunction(ix,iy);
         }
     }
+
+    // Run Jacobi Iterative Solver
+    bool converged(false);
+    unsigned int iter_num(0);
+    do{
+        for( unsigned int ix(1); ix < u_grid_.size()-1; ix++)
+            for( unsigned int iy(1); iy < u_grid_[ix].size()-1; iy++)
+                u_grid_[ix][iy] = .25 * ( u_grid_old_[ix-1][iy] + u_grid_old_[ix+1][iy] + u_grid_old_[ix][iy-1] + u_grid_old_[ix][iy+1] - f_values[ix][iy] * pow(gspace,2) );
+        u_grid_old_ = u_grid_;
+        // Check wether the algorithm converges
+        if(iter_num % conv_freq_test == 0)
+            if(GetDistance(u_grid_,u_values) < (pow(gsize_,2) * precision_))
+                converged = true;
+        iter_num++;
+    }while(not converged);
 }
 
-double PoissonSolver::F_function(unsigned int ix, unsigned int iy) const{
-    return -200.*pow(M_PI,2)*U_function(ix,iy);
+double PoissonSolver::FFunction(unsigned int ix, unsigned int iy) const{
+    return -200.*pow(M_PI,2)*UFunction(ix,iy);
 }
 
-double PoissonSolver::U_function(unsigned int ix, unsigned int iy) const{
+double PoissonSolver::UFunction(unsigned int ix, unsigned int iy) const{
     return sin(10*M_PI*ix/gsize_) * sin(10*M_PI*iy/gsize_);
+}
+
+double PoissonSolver::GetDistance(const std::vector<std::vector<double>> &v1,
+        const std::vector<std::vector<double>> &v2) const{
+    double dist(0.);
+    for( unsigned int ix(0); ix < v1.size(); ix++ )
+        for( unsigned int iy(0); iy < v1[ix].size(); iy++ )
+            dist += pow(v1[ix][iy]-v2[ix][iy],2);
+    return sqrt(dist);
 }

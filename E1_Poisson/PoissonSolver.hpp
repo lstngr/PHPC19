@@ -13,9 +13,11 @@ namespace PHPC19{
             void SetICs();
             void SetParameters();
             void Run();
-            double F_function(unsigned int ix, unsigned int iy) const;
-            double U_function(unsigned int ix, unsigned int iy) const;
+            double FFunction(unsigned int ix, unsigned int iy) const;
+            double UFunction(unsigned int ix, unsigned int iy) const;
         private:
+            double GetDistance(const std::vector<std::vector<double>>&,
+                    const std::vector<std::vector<double>>&) const;
             unsigned int gsize_;
             double precision_;
             std::string output_file_;
