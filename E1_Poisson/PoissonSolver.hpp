@@ -10,8 +10,8 @@ namespace PHPC19{
         public:
             PoissonSolver();
             virtual ~PoissonSolver(){}
-            void SetICs();
-            void SetParameters();
+            //void SetICs();
+            //void SetParameters();
             void Run();
             double FFunction(unsigned int ix, unsigned int iy) const;
             double UFunction(unsigned int ix, unsigned int iy) const;
