@@ -1,9 +1,10 @@
 #include <cmath>
 #include <iostream>
+#include "PoissonSolver.hpp"
 
 using namespace std;
 
 int main(){
-	PoissonSolver kiki;
+    PHPC19::PoissonSolver kiki;
 	return 0;
 }
