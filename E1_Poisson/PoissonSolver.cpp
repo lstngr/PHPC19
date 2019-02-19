@@ -5,7 +5,7 @@ using namespace PHPC19;
 
 PoissonSolver::PoissonSolver()
     :gsize_(100),
-    precision_(1e-7),
+    precision_(1e-3),
     output_file_("output.out"),
     u_grid_(std::vector<std::vector<double>>(gsize_,std::vector<double>(gsize_,0.0)))
 {
@@ -20,8 +20,8 @@ void PoissonSolver::Run(){
     // Define convergence test frequency
     int conv_freq_test(20);
     // Avoid CPU cost by computing all U/F_function possible beforehand
-    std::vector<std::vector<double>> u_values;
-    std::vector<std::vector<double>> f_values;
+    std::vector<std::vector<double>> u_values(u_grid_);
+    std::vector<std::vector<double>> f_values(u_grid_);
     for( unsigned int ix=0; ix<gsize_; ix++ ){
         for( unsigned int iy=0; iy<gsize_; iy++ ){
             u_values[ix][iy] = UFunction(ix,iy);
