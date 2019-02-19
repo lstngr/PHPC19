@@ -7,12 +7,14 @@ OBJECTS = Poisson.o PoissonSolver.o
 
 all: Poisson
 
-$(TARGET): Poisson.o PoissonSolver.o
+$(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(TARGET)
 
 Poisson.o: Poisson.cpp PoissonSolver.hpp
+	$(CXX) $(CXXFLAGS) -c Poisson.cpp -o Poisson.o
 	
 PoissonSolver.o: PoissonSolver.cpp PoissonSolver.hpp
+	$(CXX) $(CXXFLAGS) -c PoissonSolver.cpp -o PoissonSolver.o
 
 clean:
 	rm $(OBJECTS) $(TARGET)
