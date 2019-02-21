@@ -1,5 +1,7 @@
 #include "PoissonSolver.hpp"
 #include <cmath>
+#include <iostream>
+#include <fstream>
 
 using namespace PHPC19;
 
@@ -43,6 +45,19 @@ void PoissonSolver::Run(){
                 converged = true;
         iter_num++;
     }while(not converged);
+}
+
+void PoissonSolver::ExportU(const std::string& filename) const{
+    std::ofstream output;
+    output.open(filename);
+    for(unsigned int ix=1; ix<gsize_; ix++){
+        for(unsigned int iy=1; iy<gsize_; iy++){
+            output << u_grid_[ix][iy] << " ";
+        }
+        output << std::endl;
+    }
+    output << std::endl << std::endl;
+    output.close();
 }
 
 double PoissonSolver::FFunction(unsigned int ix, unsigned int iy) const{

@@ -13,6 +13,7 @@ namespace PHPC19{
             //void SetICs();
             //void SetParameters();
             void Run();
+            void ExportU(const std::string& filename) const;
             double FFunction(unsigned int ix, unsigned int iy) const;
             double UFunction(unsigned int ix, unsigned int iy) const;
         private:

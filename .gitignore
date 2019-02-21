@@ -3,3 +3,8 @@
 
 # Exclude objects
 **/*.o
+
+# MATLAB Bullsh*t
+**/*.*~
+**/*.eps
+**/*.fig
