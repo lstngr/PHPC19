@@ -50,8 +50,8 @@ void PoissonSolver::Run(){
 void PoissonSolver::ExportU(const std::string& filename) const{
     std::ofstream output;
     output.open(filename);
-    for(unsigned int ix=1; ix<gsize_; ix++){
-        for(unsigned int iy=1; iy<gsize_; iy++){
+    for(unsigned int ix=0; ix<gsize_; ix++){
+        for(unsigned int iy=0; iy<gsize_; iy++){
             output << u_grid_[ix][iy] << " ";
         }
         output << std::endl;
