@@ -4,7 +4,14 @@
 # Exclude objects
 **/*.o
 
+# Exclude Code Outputs
+**/*.out
+
 # MATLAB Bullsh*t
 **/*.*~
 **/*.eps
 **/*.fig
+**/*.dat
+
+# LaTeX and PDF documents
+**/*.pdf
