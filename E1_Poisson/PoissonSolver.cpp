@@ -5,10 +5,12 @@
 
 using namespace PHPC19;
 
-PoissonSolver::PoissonSolver()
-    :gsize_(100),
-    precision_(1e-3),
-    output_file_("output.out"),
+PoissonParameters::PoissonParameters( unsigned int g, double p, std::string of ): gsize(g), precision(p), output_file(of) {}
+
+PoissonSolver::PoissonSolver( const PoissonParameters& params )
+    :gsize_( params.gsize ),
+    precision_( params.precision ),
+    output_file_( params.output_file ),
     u_grid_(std::vector<std::vector<double>>(gsize_,std::vector<double>(gsize_,0.0)))
 {
     // Nothing to see yet!
@@ -45,6 +47,13 @@ void PoissonSolver::Run(){
                 converged = true;
         iter_num++;
     }while(not converged);
+}
+
+void PoissonSolver::ExportU() const{
+    if(output_file_.length()>0)
+        ExportU(output_file_);
+    else
+        std::cerr << "No export file set!" << std::endl;
 }
 
 void PoissonSolver::ExportU(const std::string& filename) const{

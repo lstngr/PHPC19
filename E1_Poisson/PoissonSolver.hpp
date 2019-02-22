@@ -6,13 +6,21 @@
 
 namespace PHPC19{
 
+    struct PoissonParameters{
+        PoissonParameters(unsigned int gsize=100, double precision=1e-5, std::string output_file="output.out");
+        unsigned int gsize;
+        double precision;
+        std::string output_file;
+    };
+
     class PoissonSolver{
         public:
-            PoissonSolver();
+            PoissonSolver( const PoissonParameters& params = PoissonParameters());
             virtual ~PoissonSolver(){}
             //void SetICs();
             //void SetParameters();
             void Run();
+            void ExportU() const;
             void ExportU(const std::string& filename) const;
             double FFunction(unsigned int ix, unsigned int iy) const;
             double UFunction(unsigned int ix, unsigned int iy) const;
