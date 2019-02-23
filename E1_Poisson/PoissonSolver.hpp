@@ -7,7 +7,7 @@
 namespace PHPC19{
 
     struct PoissonParameters{
-        PoissonParameters(unsigned int gsize=100, double precision=1e-5, std::string output_file="output.out");
+        PoissonParameters(unsigned int gsize=100, double precision=1e-4, std::string output_file="output.out");
         unsigned int gsize;
         double precision;
         std::string output_file;

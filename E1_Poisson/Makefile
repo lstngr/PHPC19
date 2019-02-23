@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -g
+CXXFLAGS = -g -Wall -W -pedantic
 
 TARGET = Poisson
 SOURCES = Poisson.cpp PoissonSolver.cpp
