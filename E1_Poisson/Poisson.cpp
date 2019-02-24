@@ -28,12 +28,11 @@ int main( int argc, char *const argv[] ){
                 fprintf(stderr, "%s: option '-%c' requires an argument\n",
                         argv[0], optopt);
                 break;
-            case '?':
             default:
                 /* invalid option */
-                fprintf(stderr, "%s: option '-%c' is invalid: ignored\n",
-                        argv[0], optopt);
-                break;
+                fprintf(stderr, "Usage: %s [-s gridsize] [-p precision] [-o output.file]\n",
+                        argv[0]);
+                return 1;
         }
     }
 
@@ -41,5 +40,5 @@ int main( int argc, char *const argv[] ){
     PHPC19::PoissonSolver kiki(params);
     kiki.Run();
     kiki.ExportU();
-	return 0;
+    return 0;
 }
