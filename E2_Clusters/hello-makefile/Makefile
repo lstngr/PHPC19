@@ -1,6 +1,6 @@
 CXX=g++
 LD=${CXX}
-CXXFLAGS+=
+CXXFLAGS+= -Wall -Werror
 LDFLAGS+=
 OBJS=hello.o greetings.o
 
