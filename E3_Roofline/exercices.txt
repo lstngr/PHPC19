@@ -21,7 +21,7 @@ to determine de theoretical peak performance of a core
 How to run:
 $> module load intel
 $> export KMP_AFFINITY=compact,granularity=fine
-$> export OMP_NUM_THREADS=8
+$> export OMP_NUM_THREADS=7
 $> srun -n 1 ./stream 
 or
 $> srun -n 1 ./dgemm 

@@ -1,0 +1,69 @@
+1- theoretical roofline
+-----------------------
+
+#FP Ports: 1 (2 physical)
+flops/cycle: 2 (assume FMA?)
+vector size(DLP): AVX flag -> 256b -> 256/64=4 DP floats -?> 8
+frequency(GHz): 2.6
+#cores: 8
+
+theoretical peak FP perf: 128*2.6=332.8Gflops/s
+
+2- measured roofline
+--------------------
+STREAM OUTPUT:
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:           25223.1     0.056108     0.050747     0.079425
+Scale:          25230.2     0.053440     0.050733     0.060476
+Add:            29459.1     0.065558     0.065175     0.066083
+Triad:          30079.5     0.065889     0.063831     0.077673
+DGEMM OUTPUT:
+Size = 8000, Gflops Max: 88.697462  Min: 88.697462  Avg:  88.697462
+
+Peak brandwidth: 30GB/s
+Peak performance: 88.7 Gflops/s
+Ridge Point: 2.96
+
+NOTE: Class slides - Compute the  triad performance
+Triad =equiv= c[i] = scalar*a[i] + b[i]
+So 2 operations (flops) and 3 floats (3*8=24B). 
+The AI = 2/24 = 0.083 Gflops/GB
+We are below the ridge point, so the performance is given by (peak brandwidth)*(AI) and not the (peak FP perfo).
+In our case, 0.083 < 2.96 so the actual performance becomes:
+perf = 30GB/s * 0.083Glops/GB = 2.49 Gflops/s << 88.7Gflops/s
+
+CONCLUSION: Memory access increases the latency of the test, and we are prevented from reaching peak performance (we would need more memory locality).
+
+3- Jacobi stencil
+-----------------
+Arithmetic intensity:
+-- 4 operations (4 flops)
+-- 5 variables (5 floats)
+AI = 4/(5*8) = 0.1 Gflops/GB
+
+The AI is below the ridge point. Need to compute peakBW*AI:
+Perf = 30GB/s * 0.1 Gflops/GB = 3Gflops/s
+
+OUTPUT -- Jacobi (naive):
+iter = 20, linf norm = 0.0178516 l2 norm = 1.4997e-06, 3984016 flops, 2063672 cycles, 1.930547 flops/cycle, 0.000796 s., 5.004545 Gflops/s
+COMMENT: Surprisingly higher?
+
+
+
+4- DLP Implementations
+----------------------
+OUTPUT -- Jacobi (AVX)
+iter = 20, linf norm = 0.0178516 l2 norm = 1.4997e-06, 3984016 flops, 2377058 cycles, 1.676028 flops/cycle, 0.000917 s., 4.344819 Gflops/s
+COMMENT: Oww, slower than naive??
+
+OUTPUT -- Jacobi (SSE)
+iter = 20, linf norm = 0.0178516 l2 norm = 1.4997e-06, 3984016 flops, 2172385 cycles, 1.833936 flops/cycle, 0.000838 s., 4.753961 Gflops/s
+COMMENT: Again slower??
+
+OUTPUT -- Jacobi (AVX-Block)
+iter = 20, linf norm = 0.0178516 l2 norm = 7.55027e-07, 3984016 flops, 2435819 cycles, 1.635596 flops/cycle, 0.000939 s., 4.242238 Gflops/s
+COMMENT: Slower.
+
+OUTPUT -- Jacobi (AVX-Peel)
+iter = 20, linf norm = 0.0178516 l2 norm = 1.4997e-06, 3984016 flops, 3782199 cycles, 1.053360 flops/cycle, 0.001458 s., 2.732206 Gflops/s
+COMMENT: Super slower...
