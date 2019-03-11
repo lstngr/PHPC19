@@ -30,9 +30,11 @@ std::tuple<float, int> Simulation::compute() {
 
     m_grids.swap();
 
-    m_dumper->dump(s);
+    // m_dumper->dump(s); - Declaration moved at end
     ++s;
   } while (l2 > m_epsilon);
+  
+  m_dumper->dump(s);
 
   return std::make_tuple(l2, s);
 }
@@ -50,8 +52,8 @@ float Simulation::compute_step() {
   Grid & u = m_grids.current();
   Grid & uo = m_grids.old();
 
-  for (int j = 1; j < m_global_n - 1; j++) {  
-    for (int i = 1; i < m_global_m - 1; i++) {
+  for (int i = 1; i < m_global_n - 1; i++) {  
+    for (int j = 1; j < m_global_m - 1; j++) {
       // computation of the new step
       u(i, j) = 0.25 * (uo(i - 1, j) + uo(i + 1, j) + uo(i, j - 1) +
                         uo(i, j + 1) - m_f(i, j) * m_h_m * m_h_n);
