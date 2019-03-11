@@ -3,6 +3,7 @@
 
 # Exclude objects
 **/*.o
+**/*.s
 
 # Exclude Code Outputs
 **/*.out
