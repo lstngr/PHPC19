@@ -16,3 +16,6 @@
 
 # LaTeX and PDF documents
 **/*.pdf
+
+# Large files
+E4_OpenMP/poisson/perf.data
