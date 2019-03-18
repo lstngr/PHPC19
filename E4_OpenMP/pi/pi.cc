@@ -30,9 +30,8 @@ int main(int /* argc */ , char ** /* argv */) {
 
 
 
-
-
 #ifdef _OPENMP
+  nthreads = omp_get_max_threads();
   auto omp_t1 = omp_get_wtime();
 #endif
   auto t1 = clk::now();
@@ -40,11 +39,12 @@ int main(int /* argc */ , char ** /* argv */) {
   /* calculate pi = integral [0..1] 4 / (1 + x**2) dx */
   dx = 1. / n;
   sum = 0.0;
+#pragma omp for schedule(static)
   for (i = 0; i < n; i++) {
     x = 1. * i * dx;
     sum = sum + f(x);
   }
-  pi = dx * sum;
+ pi = dx * sum;
 
 
 
