@@ -39,8 +39,9 @@ int main(int argc, char *argv[]) {
   MPI_Status status;
   MPI_Request request;
   for(int ir=1;ir<size;ir++){
-    MPI_Sendrecv(&add1, 1, MPI_DOUBLE, (rank+1)%size     , 0,
-                 &add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
+    MPI_Isend(&add1, 1, MPI_DOUBLE, (rank+1)%size, 0, MPI_COMM_WORLD, &request);
+    MPI_Recv (&add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
+    MPI_Wait (&request, &status);
     add1 = add2;
     pi += add1;
   }
