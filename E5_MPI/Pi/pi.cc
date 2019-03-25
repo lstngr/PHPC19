@@ -37,14 +37,10 @@ int main(int argc, char *argv[]) {
  
   double add1(pi), add2(pi);
   MPI_Status status;
+  MPI_Request request;
   for(int ir=1;ir<size;ir++){
-    if(rank%2==0){
-      MPI_Ssend(&add1, 1, MPI_DOUBLE, (rank+1)%size, 0, MPI_COMM_WORLD);
-      MPI_Recv (&add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
-    } else {
-      MPI_Recv (&add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
-      MPI_Ssend(&add1, 1, MPI_DOUBLE, (rank+1)%size, 0, MPI_COMM_WORLD);
-    }
+    MPI_Sendrecv(&add1, 1, MPI_DOUBLE, (rank+1)%size     , 0,
+                 &add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
     add1 = add2;
     pi += add1;
   }
