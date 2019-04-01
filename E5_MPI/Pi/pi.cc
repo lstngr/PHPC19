@@ -35,22 +35,15 @@ int main(int argc, char *argv[]) {
   }
   pi = dx * sum;
  
-  double add1(pi), add2(pi);
+  double add1(pi);
   MPI_Status status;
   MPI_Request request;
-  for(int ir=1;ir<size;ir++){
-    MPI_Isend(&add1, 1, MPI_DOUBLE, (rank+1)%size, 0, MPI_COMM_WORLD, &request);
-    MPI_Recv (&add2, 1, MPI_DOUBLE, (rank-1+size)%size, 0, MPI_COMM_WORLD, &status);
-    MPI_Wait (&request, &status);
-    add1 = add2;
-    pi += add1;
-  }
+  double newpi[size];
+  MPI_Gather(&add1, 1, MPI_DOUBLE, &newpi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  pi = 0.;
+  for(int i=0; i < size; i++)
+    pi += newpi[i];
 
   std::printf("computed pi (thread %d )        = %.16g\n", rank,  pi);
-
-//  for(int d = 1; d <= 15; ++d) {
-//    std::printf("%d", digit(pi, d));
-//  }
-
   MPI_Finalize();
 }
