@@ -42,8 +42,9 @@ int main(int argc, char *argv[]) {
   MPI_Gather(&add1, 1, MPI_DOUBLE, &newpi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   pi = 0.;
   for(int i=0; i < size; i++)
-    pi += newpi[i];
-
+   pi += newpi[i];
+  MPI_Bcast(&pi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  
   std::printf("computed pi (thread %d )        = %.16g\n", rank,  pi);
   MPI_Finalize();
 }
